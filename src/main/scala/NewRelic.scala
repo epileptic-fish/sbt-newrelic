@@ -44,6 +44,7 @@ object NewRelic extends AutoPlugin {
     val newrelicIgnoreStatusCodes = settingKey[Seq[Int]]("List of HTTP status codes that New Relic should not report as errors. Default is `404`.")
     val newrelicFuturesAsSegments = settingKey[Boolean]("Report Scala Futures as transaction segments.")
     val newrelicLiteMode = settingKey[Boolean]("Use lite mode.")
+    val newrelicDistributedTracingEnabled = settingKey[Boolean]("Enable Distributed Tracing in New Relic.")
   }
 
   import autoImport._
@@ -72,6 +73,7 @@ object NewRelic extends AutoPlugin {
     newrelicIgnoreStatusCodes := Seq(404),
     newrelicFuturesAsSegments := false,
     newrelicLiteMode := false,
+    newrelicDistributedTracingEnabled := false,
     newrelicTemplateReplacements := Seq(
       "app_name" -> newrelicAppName.value,
       "license_key" -> newrelicLicenseKey.value.getOrElse(""),
@@ -85,7 +87,8 @@ object NewRelic extends AutoPlugin {
       "audit_mode" -> newrelicAuditMode.value.toString,
       "ignore_status_codes" -> newrelicIgnoreStatusCodes.value.mkString(","),
       "scala_futures_as_segments" -> newrelicFuturesAsSegments.value.toString,
-      "lite_mode" -> newrelicLiteMode.value.toString
+      "lite_mode" -> newrelicLiteMode.value.toString,
+      "distributed_tracing_enabled" -> newrelicDistributedTracingEnabled.value.toString
     ),
     newrelicIncludeApi := false,
     libraryDependencies += "com.newrelic.agent.java" % "newrelic-agent" % newrelicVersion.value % NrConfig,
